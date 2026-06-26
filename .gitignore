@@ -1,0 +1,27 @@
+# ai-career-companion/.gitignore
+
+# What is this file?
+# Tells Git which files to NEVER track or upload to GitHub.
+# The most critical rule: never commit .env files (they contain secrets).
+
+# Dependencies — these are huge folders, reinstalled with npm install
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables — NEVER share these
+.env
+.env.local
+.env.production
+
+# Build output — generated files, not source
+client/dist/
+server/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/settings.json
+.idea/

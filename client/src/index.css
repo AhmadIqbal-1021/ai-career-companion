@@ -1,0 +1,7 @@
+/* client/src/index.css */
+
+/* This single line activates all of Tailwind's utility classes in your project.
+   Tailwind will scan your JSX files and generate only the CSS classes you actually use.
+   This keeps your final CSS file tiny — sometimes just 5-10kb. */
+
+@import "tailwindcss";
