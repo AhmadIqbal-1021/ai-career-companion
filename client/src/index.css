@@ -5,3 +5,10 @@
    This keeps your final CSS file tiny — sometimes just 5-10kb. */
 
 @import "tailwindcss";
+
+/* Enable class-based dark mode strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  scroll-behavior: smooth;
+}
