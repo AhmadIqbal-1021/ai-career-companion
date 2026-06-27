@@ -6,6 +6,8 @@
 // Keeping this separate from server.js is a best practice —
 // it lets you import the app in tests without starting a real server.
 
+// Add this import at the top of app.js
+import authRoutes from './routes/auth.routes.js'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -57,5 +59,29 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   })
 })
+
+
+
+// Add this after the health check route
+app.use('/api/auth', authRoutes)
+
+
+
+
+
+// Add to server/src/app.js
+
+import rateLimit from 'express-rate-limit'
+
+// Limit auth endpoints — max 10 attempts per 15 minutes per IP
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: { success: false, message: 'Too many attempts, try again in 15 minutes' }
+})
+
+app.use('/api/auth', authLimiter)
+
+
 
 export default app

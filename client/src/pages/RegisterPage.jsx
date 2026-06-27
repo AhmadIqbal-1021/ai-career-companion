@@ -30,29 +30,19 @@ export default function RegisterPage() {
     { label: 'Contains a number', pass: /\d/.test(formData.password) },
     { label: 'Contains a letter', pass: /[a-zA-Z]/.test(formData.password) },
   ]
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
-
-    try {
-      // TODO: Replace with real API call in auth milestone
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      login({
-        id: 1,
-        name: formData.name,
-        email: formData.email,
-      })
-      navigate('/dashboard')
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  setIsLoading(true)
+  setError('')
+  try {
+    await register(formData)
+    navigate('/dashboard')
+  } catch (err) {
+    setError(err.response?.data?.message || 'Something went wrong')
+  } finally {
+    setIsLoading(false)
   }
-
+}
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4 py-12">
       <motion.div

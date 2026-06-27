@@ -21,29 +21,20 @@ export default function LoginPage() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
     setError('') // clear error when user starts typing
   }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault() // prevent page reload (default form behavior)
-    setIsLoading(true)
-    setError('')
-
-    try {
-      // TODO: Replace with real API call in auth milestone
-      // For now, simulate a successful login
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      login({ 
-        id: 1, 
-        name: 'Test User', 
-        email: formData.email 
-      })
-      navigate('/dashboard')
-    } catch (err) {
-      setError('Invalid email or password')
-    } finally {
-      setIsLoading(false)
-    }
+// In LoginPage.jsx — replace handleSubmit:
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  setIsLoading(true)
+  setError('')
+  try {
+    await login(formData)
+    navigate('/dashboard')
+  } catch (err) {
+    setError(err.response?.data?.message || 'Invalid email or password')
+  } finally {
+    setIsLoading(false)
   }
+}
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
