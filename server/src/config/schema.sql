@@ -74,3 +74,29 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 CREATE INDEX IF NOT EXISTS idx_applications_user_id ON applications(user_id);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token);
+-- Internship Discovery Board table
+CREATE TABLE IF NOT EXISTS internship_discoveries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  
+  title VARCHAR(255) NOT NULL,
+  company VARCHAR(255) NOT NULL,
+  url VARCHAR(1000),
+  
+  source VARCHAR(50) DEFAULT 'other'
+    CHECK (source IN ('linkedin', 'whatsapp', 'company_website', 'rozee', 'mustakbil', 'other')),
+  
+  status VARCHAR(50) DEFAULT 'saved'
+    CHECK (status IN ('saved', 'applied', 'expired')),
+  
+  deadline DATE,
+  notes TEXT,
+  is_remote BOOLEAN DEFAULT FALSE,
+  location VARCHAR(255),
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for fast user queries
+CREATE INDEX IF NOT EXISTS idx_discoveries_user_id ON internship_discoveries(user_id);

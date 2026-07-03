@@ -22,14 +22,21 @@ export default function LoginPage() {
     setError('') // clear error when user starts typing
   }
 // In LoginPage.jsx — replace handleSubmit:
+// 
 const handleSubmit = async (e) => {
   e.preventDefault()
   setIsLoading(true)
   setError('')
+  
+  console.log('Form data being sent:', formData) // ADD THIS
+  
   try {
-    await login(formData)
+    const result = await login(formData)
+    console.log('Login result:', result) // ADD THIS
     navigate('/dashboard')
   } catch (err) {
+    console.log('Full error:', err) // ADD THIS
+    console.log('Error response:', err.response) // ADD THIS
     setError(err.response?.data?.message || 'Invalid email or password')
   } finally {
     setIsLoading(false)

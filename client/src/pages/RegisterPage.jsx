@@ -16,7 +16,8 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const { login } = useAuth()
+  // const { login } = useAuth()
+  const { register } = useAuth()
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -30,14 +31,32 @@ export default function RegisterPage() {
     { label: 'Contains a number', pass: /\d/.test(formData.password) },
     { label: 'Contains a letter', pass: /[a-zA-Z]/.test(formData.password) },
   ]
+// const handleSubmit = async (e) => {
+//   e.preventDefault()
+//   setIsLoading(true)
+//   setError('')
+//   try {
+//     await register(formData)
+//     navigate('/dashboard')
+//   } catch (err) {
+//     setError(err.response?.data?.message || 'Something went wrong')
+//   } finally {
+//     setIsLoading(false)
+//   }
+// }
 const handleSubmit = async (e) => {
   e.preventDefault()
   setIsLoading(true)
   setError('')
+
+  console.log('Register form data:', formData) // ADD THIS
+
   try {
-    await register(formData)
+    const result = await register(formData)
+    console.log('Register result:', result) // ADD THIS
     navigate('/dashboard')
   } catch (err) {
+    console.log('Register error:', err.response?.data) // ADD THIS
     setError(err.response?.data?.message || 'Something went wrong')
   } finally {
     setIsLoading(false)

@@ -4,7 +4,7 @@
 // All API calls related to authentication.
 // Components never call fetch() directly — they use these functions.
 // If the API URL changes, we update only this file.
-
+console.log('API Base URL:', import.meta.env.VITE_API_URL)
 import axios from 'axios'
 
 const API = axios.create({

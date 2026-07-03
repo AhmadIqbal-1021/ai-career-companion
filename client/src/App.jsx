@@ -2,33 +2,68 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute'
 
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
+import ResumeAnalyzerPage from './pages/ResumeAnalyzerPage'
+import CoverLetterPage from './pages/CoverLetterPage'
+import InterviewPrepPage from './pages/InterviewPrepPage'
+import DiscoveryBoardPage from './pages/DiscoveryBoardPage'
+import ApplicationsPage from './pages/ApplicationsPage'
 
 function App() {
   return (
-    // BrowserRouter enables URL-based routing
     <BrowserRouter>
-      {/* AuthProvider wraps everything so all components can access auth state */}
       <AuthProvider>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            className: 'dark:bg-gray-800 dark:text-white',
+            duration: 3000,
+          }}
+        />
         <Routes>
-          {/* Public routes — anyone can visit */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Protected routes — only logged in users */}
+          {/* Dashboard home — shows overview + application tracker table */}
           <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
+            <ProtectedRoute><DashboardPage /></ProtectedRoute>
           } />
 
-          {/* 404 fallback */}
+          {/*
+            FIX for Issue 3:
+            The sidebar links to /dashboard/applications, but this route
+            was never registered — it only existed inside the sidebar's
+            navItems array, not in the router. That mismatch is exactly
+            why React Router fell through to the 404 catch-all route.
+
+            Since DashboardPage already contains the application tracker,
+            we simply point this URL to the SAME page component.
+            This is a common, valid pattern — one component, multiple URLs.
+          */}
+          <Route path="/dashboard/applications" element={
+  <ProtectedRoute><ApplicationsPage /></ProtectedRoute>
+} />
+
+          <Route path="/dashboard/discoveries" element={
+            <ProtectedRoute><DiscoveryBoardPage /></ProtectedRoute>
+          } />
+          <Route path="/dashboard/resume-analyzer" element={
+            <ProtectedRoute><ResumeAnalyzerPage /></ProtectedRoute>
+          } />
+          <Route path="/dashboard/cover-letter" element={
+            <ProtectedRoute><CoverLetterPage /></ProtectedRoute>
+          } />
+          <Route path="/dashboard/interview-prep" element={
+            <ProtectedRoute><InterviewPrepPage /></ProtectedRoute>
+          } />
+
           <Route path="*" element={
             <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
               <div className="text-center">
