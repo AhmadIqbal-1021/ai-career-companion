@@ -1,0 +1,15 @@
+# server/render.yaml
+
+# What is this file?
+# Tells Render how to build and run your backend.
+# Render reads this automatically when you connect your repository.
+
+services:
+  - type: web
+    name: ai-career-companion-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

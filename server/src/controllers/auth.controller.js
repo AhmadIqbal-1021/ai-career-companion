@@ -58,13 +58,12 @@ export const register = async (req, res) => {
     )
 
     // 6. Set refresh token as HttpOnly cookie
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,     // JavaScript cannot read this cookie
-      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-      sameSite: 'strict', // Prevents CSRF attacks
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
-    })
-
+   res.cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  secure: true, // Always true — Render uses HTTPS
+  sameSite: 'none', // Required for cross-domain cookies
+  maxAge: 7 * 24 * 60 * 60 * 1000
+})
     // 7. Send access token and user data in response
     res.status(201).json({
       success: true,
@@ -131,11 +130,11 @@ export const login = async (req, res) => {
 
     // 5. Set cookie
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+  httpOnly: true,
+  secure: true, // Always true — Render uses HTTPS
+  sameSite: 'none', // Required for cross-domain cookies
+  maxAge: 7 * 24 * 60 * 60 * 1000
+})
 
     res.json({
       success: true,
