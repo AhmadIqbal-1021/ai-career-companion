@@ -184,3 +184,40 @@ export const getStats = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' })
   }
 }
+// Add this new export at the bottom of applications.controller.js
+
+// ─── GET CHART DATA ───────────────────────────────────────────
+export const getChartData = async (req, res) => {
+  try {
+    // Applications by status — for donut chart
+    const statusResult = await query(
+      `SELECT status, COUNT(*) as count
+       FROM applications
+       WHERE user_id = $1
+       GROUP BY status`,
+      [req.userId]
+    )
+
+    // Applications per week for last 8 weeks — for timeline chart
+    const timelineResult = await query(
+      `SELECT 
+         TO_CHAR(DATE_TRUNC('week', created_at), 'Mon DD') as week,
+         COUNT(*) as count
+       FROM applications
+       WHERE user_id = $1
+         AND created_at >= NOW() - INTERVAL '8 weeks'
+       GROUP BY DATE_TRUNC('week', created_at)
+       ORDER BY DATE_TRUNC('week', created_at)`,
+      [req.userId]
+    )
+
+    res.json({
+      success: true,
+      statusData: statusResult.rows,
+      timelineData: timelineResult.rows,
+    })
+  } catch (err) {
+    console.error('Chart data error:', err)
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+}

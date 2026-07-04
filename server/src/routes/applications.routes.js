@@ -1,14 +1,16 @@
     // server/src/routes/applications.routes.js
 
 import { Router } from 'express'
-import { 
-  getApplications, getApplication,
-  createApplication, updateApplication, 
-  deleteApplication, getStats
-} from '../controllers/applications.controller.js'
+
 import { authenticate } from '../middleware/auth.middleware.js'
 import { body } from 'express-validator'
 import { handleValidationErrors } from '../middleware/validate.middleware.js'
+import { 
+  getApplications, getApplication,
+  createApplication, updateApplication,
+  deleteApplication, getStats, getChartData
+} from '../controllers/applications.controller.js'
+
 
 const router = Router()
 
@@ -25,6 +27,7 @@ const applicationValidation = [
 
 router.get('/stats', getStats)
 router.get('/', getApplications)
+router.get('/chart-data', getChartData)
 router.get('/:id', getApplication)
 router.post('/', applicationValidation, handleValidationErrors, createApplication)
 router.put('/:id', updateApplication)

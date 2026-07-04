@@ -1,12 +1,16 @@
 // client/src/pages/DashboardPage.jsx
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, ArrowRight } from 'lucide-react'
+import { Plus, ArrowRight, TrendingUp ,Sun } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import StatsCards from '../components/dashboard/StatsCards'
+import StatusDonutChart from '../components/dashboard/StatusDonutChart'
+import TimelineChart from '../components/dashboard/TimelineChart'
+import FunnelChart from '../components/dashboard/FunnelChart'
 import ApplicationModal from '../components/dashboard/ApplicationModal'
 import { useApplications } from '../hooks/useApplications.jsx'
+import { applicationService } from '../services/applicationService'
 import { useAuth } from '../context/AuthContext'
 
 export default function DashboardPage() {
@@ -19,12 +23,19 @@ export default function DashboardPage() {
   } = useApplications()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [chartData, setChartData] = useState(null)
+
+  // Fetch chart data separately
+  useEffect(() => {
+    applicationService.getChartData()
+      .then(res => setChartData(res.data))
+      .catch(() => {})
+  }, [applications]) // refetch when applications change
 
   const handleSubmit = async (formData) => {
     await createApplication(formData)
   }
 
-  // Only show 5 most recent on dashboard overview
   const recentApplications = applications.slice(0, 5)
 
   const STATUS_STYLES = {
@@ -52,8 +63,10 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
+              
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Good morning, {user?.name?.split(' ')[0]} 👋
+              Good morning, {user?.name?.split(' ')[0]} 
+              <Sun className="inline ml-1 w-8 h-7 -translate-y-0.5 text-amber-500" />
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
               Here is your job search overview
@@ -71,10 +84,39 @@ export default function DashboardPage() {
         {/* Stats */}
         <StatsCards stats={stats} />
 
-        {/* Recent Applications Preview */}
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+        {/* Charts Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-          {/* Section Header */}
+          {/* Donut Chart */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <h2 className="font-semibold text-gray-900 dark:text-white text-sm mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+              Status Breakdown
+            </h2>
+            <StatusDonutChart data={chartData?.statusData} />
+          </div>
+
+          {/* Timeline Chart */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <h2 className="font-semibold text-gray-900 dark:text-white text-sm mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+              Applications Over Time
+            </h2>
+            <TimelineChart data={chartData?.timelineData} />
+          </div>
+
+          {/* Funnel Chart */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <h2 className="font-semibold text-gray-900 dark:text-white text-sm mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+              Hiring Funnel
+            </h2>
+            <FunnelChart stats={stats} />
+          </div>
+        </div>
+
+        {/* Recent Applications */}
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800">
             <h2 className="font-semibold text-gray-900 dark:text-white text-sm">
               Recent Applications
@@ -88,7 +130,6 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          {/* Empty State */}
           {recentApplications.length === 0 && (
             <div className="text-center py-12">
               <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">
@@ -106,7 +147,6 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Recent List */}
           {recentApplications.length > 0 && (
             <div className="divide-y divide-gray-100 dark:divide-gray-800">
               {recentApplications.map(app => (
@@ -127,7 +167,6 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* View All Footer */}
           {applications.length > 5 && (
             <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800">
               <Link
