@@ -7,7 +7,7 @@ import DiscoveryCard from '../components/dashboard/DiscoveryCard'
 import DiscoveryModal from '../components/dashboard/DiscoveryModal'
 import { useDiscoveries } from '../hooks/useDiscoveries'
 import SEO from '../components/SEO'
-import { DiscoveryCardSkeleton } from '../components/ui/Skeleton'
+import { DiscoveryCardSkeleton ,DiscoveryStatCardSkeleton } from '../components/ui/Skeleton'
 
 
 const STATUS_FILTERS = ['all', 'saved', 'applied', 'expired']
@@ -110,19 +110,32 @@ export default function DiscoveryBoardPage() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Total Saved', value: stats.total, color: 'text-gray-900 dark:text-white' },
-            { label: 'To Apply', value: stats.saved, color: 'text-blue-600 dark:text-blue-400' },
-            { label: 'Applied', value: stats.applied, color: 'text-green-600 dark:text-green-400' },
-            { label: 'Deadline Soon', value: stats.deadlineSoon, color: 'text-orange-600 dark:text-orange-400' },
-          ].map(stat => (
-            <div key={stat.label} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-              <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{stat.label}</div>
-            </div>
-          ))}
+       {isLoading ? (
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {[...Array(4)].map((_, i) => (
+      <DiscoveryStatCardSkeleton key={i} />
+    ))}
+  </div>
+) : (
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {[
+      { label: 'Total Saved', value: stats.total, color: 'text-gray-900 dark:text-white' },
+      { label: 'To Apply', value: stats.saved, color: 'text-blue-600 dark:text-blue-400' },
+      { label: 'Applied', value: stats.applied, color: 'text-green-600 dark:text-green-400' },
+      { label: 'Deadline Soon', value: stats.deadlineSoon, color: 'text-orange-600 dark:text-orange-400' },
+    ].map(stat => (
+      <div
+        key={stat.label}
+        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4"
+      >
+        <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+          {stat.label}
         </div>
+      </div>
+    ))}
+  </div>
+)}
 
         {/* Filters */}
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-3">
@@ -160,6 +173,7 @@ export default function DiscoveryBoardPage() {
         
           
           {isLoading && (
+              
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => <DiscoveryCardSkeleton key={i} />)}
             </div>

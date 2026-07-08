@@ -21,7 +21,16 @@ export function StatCardSkeleton() {
     </div>
   )
 }
-
+export function DiscoveryStatCardSkeleton() {
+  return (
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+      <div className="flex flex-col items-start">
+        <Skeleton className="w-12 h-8" />
+        <Skeleton className="w-16 h-3 mt-2" />
+      </div>
+    </div>
+  )
+}
 // Pre-built skeleton for table rows
 export function TableRowSkeleton() {
   return (
