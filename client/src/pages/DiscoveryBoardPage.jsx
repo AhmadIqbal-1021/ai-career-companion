@@ -6,6 +6,9 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import DiscoveryCard from '../components/dashboard/DiscoveryCard'
 import DiscoveryModal from '../components/dashboard/DiscoveryModal'
 import { useDiscoveries } from '../hooks/useDiscoveries'
+import SEO from '../components/SEO'
+import { DiscoveryCardSkeleton } from '../components/ui/Skeleton'
+
 
 const STATUS_FILTERS = ['all', 'saved', 'applied', 'expired']
 
@@ -84,6 +87,7 @@ export default function DiscoveryBoardPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        <SEO title="Discovery Board" description="Save and track internship opportunities from LinkedIn, WhatsApp, and company websites" />
 
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -153,11 +157,13 @@ export default function DiscoveryBoardPage() {
         </div>
 
         {/* Loading */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          </div>
-        )}
+        
+          
+          {isLoading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => <DiscoveryCardSkeleton key={i} />)}
+            </div>
+          )}
 
         {/* Empty State */}
         {!isLoading && filtered.length === 0 && (

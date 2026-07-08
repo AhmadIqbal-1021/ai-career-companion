@@ -14,6 +14,9 @@ import CoverLetterPage from './pages/CoverLetterPage'
 import InterviewPrepPage from './pages/InterviewPrepPage'
 import DiscoveryBoardPage from './pages/DiscoveryBoardPage'
 import ApplicationsPage from './pages/ApplicationsPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import PrivacyPage from './pages/PrivacyPage'
+import TermsPage from './pages/TermsPage'
 
 function App() {
   return (
@@ -30,7 +33,9 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           {/* Dashboard home — shows overview + application tracker table */}
           <Route path="/dashboard" element={
             <ProtectedRoute><DashboardPage /></ProtectedRoute>

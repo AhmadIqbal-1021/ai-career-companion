@@ -6,6 +6,8 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import ApplicationsTable from '../components/dashboard/ApplicationsTable'
 import ApplicationModal from '../components/dashboard/ApplicationModal'
 import { useApplications } from '../hooks/useApplications.jsx'
+import SEO from '../components/SEO'
+import { TableRowSkeleton } from '../components/ui/Skeleton'
 
 export default function ApplicationsPage() {
   const {
@@ -40,19 +42,32 @@ export default function ApplicationsPage() {
   const handleDelete = async (id) => {
     await deleteApplication(id)
   }
-
-  if (isLoading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        </div>
-      </DashboardLayout>
-    )
-  }
-
+if (isLoading) {
   return (
     <DashboardLayout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="w-36 h-7 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-2" />
+            <div className="w-48 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+            <div className="w-full h-9 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+          </div>
+          {[...Array(5)].map((_, i) => <TableRowSkeleton key={i} />)}
+        </div>
+      </div>
+    </DashboardLayout>
+  )
+}
+
+  return (
+    
+    <DashboardLayout>
+      
+      <SEO title="Applications" />  
       <div className="space-y-6">
 
         {/* Header */}

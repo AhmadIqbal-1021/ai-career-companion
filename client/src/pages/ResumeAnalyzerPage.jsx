@@ -8,6 +8,7 @@ import { aiService } from '../services/aiService'
 import toast from 'react-hot-toast'
 import { useAIUsage } from '../hooks/useAIUsage'
 import AIUsageBadge from '../components/dashboard/AIUsageBadge'
+import SEO from '../components/SEO'
 // Score color helper
 const getScoreColor = (score) => {
   if (score >= 80) return 'text-green-600 dark:text-green-400'
@@ -62,7 +63,7 @@ const handleAnalyze = async () => {
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-6">
-
+      <SEO title="AI Resume Analyzer" description="Get an instant ATS score, missing keywords, and actionable suggestions for your resume" />
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">

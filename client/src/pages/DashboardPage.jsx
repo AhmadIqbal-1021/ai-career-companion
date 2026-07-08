@@ -12,6 +12,9 @@ import ApplicationModal from '../components/dashboard/ApplicationModal'
 import { useApplications } from '../hooks/useApplications.jsx'
 import { applicationService } from '../services/applicationService'
 import { useAuth } from '../context/AuthContext'
+import SEO from '../components/SEO'
+import { StatCardSkeleton, ChartSkeleton, TableRowSkeleton } from '../components/ui/Skeleton'
+
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -45,20 +48,44 @@ export default function DashboardPage() {
     offer:     'bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400',
     rejected:  'bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400',
   }
-
-  if (isLoading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+if (isLoading) {
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Header skeleton */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="w-48 h-7 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-2" />
+            <div className="w-32 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          </div>
         </div>
-      </DashboardLayout>
-    )
-  }
+
+        {/* Stats skeleton */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[...Array(6)].map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+
+        {/* Charts skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {[...Array(3)].map((_, i) => <ChartSkeleton key={i} />)}
+        </div>
+
+        {/* Table skeleton */}
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+            <div className="w-32 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          </div>
+          {[...Array(4)].map((_, i) => <TableRowSkeleton key={i} />)}
+        </div>
+      </div>
+    </DashboardLayout>
+  )
+}
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        <SEO title="Dashboard" />
 
         {/* Header */}
         <div className="flex items-center justify-between">

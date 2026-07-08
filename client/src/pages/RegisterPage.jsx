@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Briefcase, Eye, EyeOff, Loader2, Check } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-
+import SEO from '../components/SEO'
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     name: '',
@@ -64,6 +64,7 @@ const handleSubmit = async (e) => {
 }
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4 py-12">
+      <SEO title="Register" description="Sign up to CareerAI account" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -8,6 +8,7 @@ import { aiService } from '../services/aiService'
 import toast from 'react-hot-toast'
 import { useAIUsage } from '../hooks/useAIUsage'
 import AIUsageBadge from '../components/dashboard/AIUsageBadge'
+import SEO from '../components/SEO'
 
 export default function CoverLetterPage() {
   const [formData, setFormData] = useState({
@@ -62,6 +63,7 @@ export default function CoverLetterPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-6">
+        <SEO title="Cover Letter Generator" description="Generate a tailored, professional cover letter in seconds with AI" />
 
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">

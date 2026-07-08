@@ -7,7 +7,7 @@
 
 import { query } from '../config/db.js'
 
-const DAILY_LIMIT = 20
+const DAILY_LIMIT = 5
 
 export const checkAIRateLimit = async (req, res, next) => {
   try {

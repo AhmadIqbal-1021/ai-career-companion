@@ -8,6 +8,8 @@ import { aiService } from '../services/aiService'
 import toast from 'react-hot-toast'
 import { useAIUsage } from '../hooks/useAIUsage'
 import AIUsageBadge from '../components/dashboard/AIUsageBadge'
+import SEO from '../components/SEO'
+
 // Collapsible question card
 function QuestionCard({ question, tip, index }) {
   const [open, setOpen] = useState(false)
@@ -72,7 +74,7 @@ export default function InterviewPrepPage() {
   return (
     <DashboardLayout>
       <div className="max-w-3xl mx-auto space-y-6">
-
+      <SEO title="Interview Prep" description="Practice with AI-generated HR and technical questions tailored to your role" />
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <MessageSquare className="w-6 h-6 text-blue-600" />

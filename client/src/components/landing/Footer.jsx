@@ -1,6 +1,7 @@
 // client/src/components/landing/Footer.jsx
 
 import { Briefcase } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
@@ -19,13 +20,21 @@ export default function Footer() {
 
           <p className="text-sm text-gray-400 dark:text-gray-500">
             © {new Date().getFullYear()} CareerAI. Built for students, by a student.
-          </p>
-
-          <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Contact</a>
-          </div>
+                      </p>
+            <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
+              <Link to="/privacy" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+                Privacy
+              </Link>
+              <Link to="/terms" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+                Terms
+              </Link>
+              <a 
+                href="mailto:ahmadiqbal1021412@gmail.com" 
+                className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Contact
+              </a>
+            </div>
         </div>
       </div>
     </footer>
