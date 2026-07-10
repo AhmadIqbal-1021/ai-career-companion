@@ -18,6 +18,9 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
 
+import ResetPasswordPage from './pages/ResetPasswordPage'
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -36,6 +39,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           {/* Dashboard home — shows overview + application tracker table */}
           <Route path="/dashboard" element={
             <ProtectedRoute><DashboardPage /></ProtectedRoute>

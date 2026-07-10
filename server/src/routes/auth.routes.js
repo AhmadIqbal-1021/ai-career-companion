@@ -6,9 +6,14 @@
 // All logic lives in controllers and middleware.
 
 import { Router } from 'express'
-import { register, login, logout, refreshToken, getMe } from '../controllers/auth.controller.js'
+import { 
+  register, login, logout, 
+  refreshToken, getMe,
+  forgotPassword, resetPassword
+} from '../controllers/auth.controller.js'
 import { registerValidation, loginValidation, handleValidationErrors } from '../middleware/validate.middleware.js'
 import { authenticate } from '../middleware/auth.middleware.js'
+import { body } from 'express-validator'
 
 const router = Router()
 
@@ -26,5 +31,23 @@ router.post('/refresh', refreshToken)
 
 // GET /api/auth/me  ← protected route
 router.get('/me', authenticate, getMe)
+
+
+// Add these two routes:
+router.post('/forgot-password', 
+  [body('email').isEmail().withMessage('Valid email required')],
+  handleValidationErrors,
+  forgotPassword
+)
+
+router.post('/reset-password',
+  [
+    body('token').notEmpty().withMessage('Token is required'),
+    body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+      .matches(/\d/).withMessage('Password must contain a number'),
+  ],
+  handleValidationErrors,
+  resetPassword
+)
 
 export default router

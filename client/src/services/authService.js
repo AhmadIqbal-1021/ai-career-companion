@@ -28,6 +28,10 @@ export const authService = {
   logout: () => API.post('/auth/logout'),
   refresh: () => API.post('/auth/refresh'),
   getMe: () => API.get('/auth/me'),
+  forgotPassword: (email) => API.post('/auth/forgot-password', { email }),
+  resetPassword: (token, password) => API.post('/auth/reset-password', { token, password }),
+
 }
+
 
 export default API

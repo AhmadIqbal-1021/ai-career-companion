@@ -8,6 +8,9 @@
 
 import bcrypt from 'bcryptjs'
 import { query } from '../config/db.js'
+
+import crypto from 'crypto'
+import { sendPasswordResetEmail } from '../services/email.service.js'
 import { 
   generateAccessToken, 
   generateRefreshToken,
@@ -227,6 +230,128 @@ export const getMe = async (req, res) => {
     res.json({ success: true, user: result.rows[0] })
 
   } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+}
+
+
+
+
+
+
+
+// ─── FORGOT PASSWORD ──────────────────────────────────────────
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body
+
+    // 1. Find user — always return success even if email not found
+    // This prevents email enumeration attacks
+    const result = await query(
+      'SELECT id, email FROM users WHERE email = $1',
+      [email]
+    )
+
+    // Always send success response — don't reveal if email exists
+    if (result.rows.length === 0) {
+      return res.json({
+        success: true,
+        message: 'If an account with that email exists, a reset link has been sent.'
+      })
+    }
+
+    const user = result.rows[0]
+
+    // 2. Generate a secure random token
+    // crypto.randomBytes(32) generates 32 random bytes
+    // toString('hex') converts to a 64 character hex string
+    const resetToken = crypto.randomBytes(32).toString('hex')
+
+    // 3. Set expiry to 1 hour from now
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000)
+
+    // 4. Delete any existing reset tokens for this user
+    await query(
+      'DELETE FROM password_reset_tokens WHERE user_id = $1',
+      [user.id]
+    )
+
+    // 5. Save new token to database
+    await query(
+      'INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
+      [user.id, resetToken, expiresAt]
+    )
+
+    // 6. Build reset URL pointing to frontend
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`
+
+    // 7. Send email
+    await sendPasswordResetEmail(user.email, resetUrl)
+
+    res.json({
+      success: true,
+      message: 'If an account with that email exists, a reset link has been sent.'
+    })
+
+  } catch (err) {
+    console.error('Forgot password error:', err)
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+}
+
+// ─── RESET PASSWORD ───────────────────────────────────────────
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body
+
+    // 1. Find the token in database
+    const result = await query(
+      `SELECT prt.*, u.email 
+       FROM password_reset_tokens prt
+       JOIN users u ON u.id = prt.user_id
+       WHERE prt.token = $1 
+         AND prt.expires_at > NOW()
+         AND prt.used = FALSE`,
+      [token]
+    )
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Reset link is invalid or has expired. Please request a new one.'
+      })
+    }
+
+    const resetRecord = result.rows[0]
+
+    // 2. Hash the new password
+    const passwordHash = await bcrypt.hash(password, 12)
+
+    // 3. Update user's password
+    await query(
+      'UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2',
+      [passwordHash, resetRecord.user_id]
+    )
+
+    // 4. Mark token as used so it can't be reused
+    await query(
+      'UPDATE password_reset_tokens SET used = TRUE WHERE token = $1',
+      [token]
+    )
+
+    // 5. Delete all refresh tokens for this user — force re-login
+    await query(
+      'DELETE FROM refresh_tokens WHERE user_id = $1',
+      [resetRecord.user_id]
+    )
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully. Please log in with your new password.'
+    })
+
+  } catch (err) {
+    console.error('Reset password error:', err)
     res.status(500).json({ success: false, message: 'Server error' })
   }
 }
