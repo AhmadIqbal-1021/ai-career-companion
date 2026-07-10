@@ -5,11 +5,12 @@ const brevo = new BrevoClient({
 });
 
 export const sendPasswordResetEmail = async (email, resetUrl) => {
+    
   await brevo.transactionalEmails.sendTransacEmail({
     subject: 'Reset your CareerAI password',
     sender: {
       name: 'CareerAI',
-      email: 'noreply@careerai.com',
+      email: 'duckychachu@gmail.com',
     },
     to: [
       {
