@@ -38,6 +38,9 @@ export function useApplications() {
       const res = await applicationService.create(data)
       // Optimistic-style: add to local state immediately after success
       setApplications(prev => [res.data.application, ...prev])
+      // Refetch stats so dashboard cards update immediately
+    const statsRes = await applicationService.getStats()
+    setStats(statsRes.data.stats)
       toast.success('Application added!')
       return res.data.application
     } catch (err) {
@@ -57,6 +60,9 @@ export function useApplications() {
       setApplications(prev =>
         prev.map(app => app.id === id ? res.data.application : app)
       )
+      // Refetch stats so dashboard cards update immediately
+    const statsRes = await applicationService.getStats()
+    setStats(statsRes.data.stats)
       toast.success('Application updated!')
     } catch (err) {
       // Revert on failure
@@ -72,7 +78,11 @@ export function useApplications() {
     setApplications(prev => prev.filter(app => app.id !== id))
     try {
       await applicationService.delete(id)
+      // Refetch stats so dashboard cards update immediately
+    const statsRes = await applicationService.getStats()
+    setStats(statsRes.data.stats)
       toast.success('Application deleted')
+
     } catch (err) {
       setApplications(previous)
       toast.error('Failed to delete')

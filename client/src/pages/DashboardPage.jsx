@@ -37,6 +37,10 @@ export default function DashboardPage() {
 
   const handleSubmit = async (formData) => {
     await createApplication(formData)
+    // Refetch chart data after adding application
+  applicationService.getChartData()
+    .then(res => setChartData(res.data))
+    .catch(() => {})
   }
 
   const recentApplications = applications.slice(0, 5)

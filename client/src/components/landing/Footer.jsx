@@ -16,8 +16,8 @@ export default function Footer() {
             <span className="font-bold text-gray-900 dark:text-white">CareerAI</span>
           </div>
 
-          <p className="text-sm text-gray-400 dark:text-gray-500">
-            © {new Date().getFullYear()} CareerAI. Built for students, by a student.
+                  <p className="text-sm text-gray-400 dark:text-gray-500">
+            © {new Date().getFullYear()} CareerAI. Built by Muhammad Ahmad Iqbal.
           </p>
 
           <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
